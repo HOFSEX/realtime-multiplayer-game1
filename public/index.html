@@ -1,0 +1,407 @@
+<html>
+  <head>
+    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png" />
+    <link rel="apple-touch-icon" href="/img/favicon.png" />
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Realtime Multiplayer Shooting Game</title>
+    <meta
+      name="description"
+      content="An exciting multiplayer shooting game with real-time interactions"
+    />
+    <meta name="author" content="roevseee" />
+
+    <meta property="og:title" content="Realtime Multiplayer Shooting Game" />
+    <meta
+      property="og:description"
+      content="Join this exciting multiplayer shooting game with real-time player interactions and competitive gameplay!"
+    />
+    <meta property="og:image" content="https://i.ibb.co.com/vVFm75h/thumbnail.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://realtime-multiplayer-game.onrender.com" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:site_name"
+      content="Realtime Multiplayer Shooting Game"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@roevseee" />
+    <meta name="twitter:creator" content="@roevseee" />
+    <meta name="twitter:title" content="Realtime Multiplayer Shooting Game" />
+    <meta
+      name="twitter:description"
+      content="Join this exciting multiplayer shooting game with real-time player interactions and competitive gameplay!"
+    />
+    <meta name="twitter:image" content="https://i.ibb.co.com/vVFm75h/thumbnail.jpg" />
+
+    <link rel="canonical" href="https://realtime-multiplayer-game.onrender.com" />
+
+    <meta name="developer" content="roevseee" />
+    <link rel="author" href="" />
+
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        margin: 0;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1a1a1a;
+      }
+
+      #scene-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+      }
+
+      #game-container {
+        position: relative;
+        width: 1024px;
+        height: 576px;
+        z-index: 2;
+        transform-origin: center;
+        max-width: 100vw;
+        max-height: 100vh;
+      }
+
+      #gameCanvas {
+        position: absolute;
+        width: 1024px;
+        height: 576px;
+        background: transparent;
+        object-fit: contain;
+      }
+
+      input::placeholder {
+        color: #94a3b8;
+      }
+
+      #leaderboard {
+        display: none; 
+        position: absolute;
+        z-index: 3;
+        color: white;
+        padding: 8px;
+        font-family: sans-serif;
+        font-size: 14px;
+        user-select: none;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      .credit-section {
+        position: fixed;
+        bottom: 10px;
+        text-align: center;
+        width: 100%;
+        z-index: 4; 
+      }
+
+      .credit-section img {
+        width: 20%; 
+        height: 20%;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      .button-container button {
+        padding: 8px 20px;
+        border-radius: 100px;
+        border: none;
+        background-image: linear-gradient(
+          to right,
+          rgb(6, 182, 212),
+          rgb(59, 130, 246)
+        );
+        color: white;
+        cursor: pointer;
+      }
+
+      .social-share {
+        display: none;
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      .social-share a {
+        display: inline-block;
+        margin: 0 10px;
+        text-decoration: none;
+        color: white;
+        font-size: 24px;
+        transition: transform 0.2s;
+      }
+
+      .social-share a:hover {
+        transform: scale(1.2);
+      }
+
+      .fa-facebook {
+        color: #1877f2;
+      }
+      .fa-twitter {
+        color: #1da1f2;
+      }
+      .fa-linkedin {
+        color: #0077b5;
+      }
+
+      .instructions {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 15px;
+        color: white;
+        margin-bottom: 20px;
+        font-family: sans-serif;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .instructions h3 {
+        margin: 0 0 15px 0;
+        color: #60a5fa;
+        font-size: 18px;
+        text-align: center;
+      }
+
+      .controls-grid {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .control-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .key {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        color: #60a5fa;
+      }
+
+      .input-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      #usernameInput {
+        width: 100%;
+        max-width: 300px;
+        padding: 12px;
+        border-radius: 20px;
+        border: none;
+        background: #475569;
+        color: #cbd5e1;
+        text-align: center;
+      }
+
+      #compatibility-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #1a1a1a;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: sans-serif;
+      }
+
+      .compatibility-content {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        max-width: 90%;
+        margin: 0 auto;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      #compatibility-overlay h2 {
+        color: #60a5fa;
+        margin: 0 0 15px 0;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        line-height: 1.2;
+      }
+
+      #compatibility-overlay p {
+        color: #fff;
+        font-size: clamp(0.9rem, 4vw, 1.1rem);
+        line-height: 1.5;
+        margin: 10px 0;
+        opacity: 0.9;
+      }
+
+      #compatibility-overlay .icon {
+        font-size: clamp(2rem, 8vw, 4rem);
+        color: #60a5fa;
+        margin-bottom: 15px;
+      }
+
+      @media (max-width: 480px) {
+        .compatibility-content {
+          padding: 20px;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+          "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.webgpu.js",
+          "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.tsl.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
+        }
+      }
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div id="compatibility-overlay">
+      <div class="compatibility-content">
+        <div class="icon">
+          <i class="fas fa-desktop"></i>
+        </div>
+        <h2>Desktop Only Game</h2>
+        <p>This game requires keyboard and mouse controls.</p>
+        <p>Please switch to a desktop/laptop computer to play.</p>
+      </div>
+    </div>
+    <div id="game-container">
+      <div id="leaderboard">
+        <div style="margin-bottom: 8px">Leaderboard</div>
+        <div id="playerLabels"></div>
+      </div>
+
+      <canvas id="gameCanvas"></canvas>
+
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+        "
+      >
+        <form id="usernameForm">
+          <div class="instructions">
+            <h3>Use Keyboard To Play</h3>
+            <div class="controls-grid">
+              <div class="control-item">
+                <span class="key">WASD</span>
+                <span>Move character</span>
+              </div>
+              <div class="control-item">
+                <span class="key">Mouse Click</span>
+                <span>Shoot</span>
+              </div>
+              <div class="control-item">
+                <span class="key">WASD + RF + QE</span>
+                <span>Fly camera</span>
+              </div>
+              <div class="control-item">
+                <span class="key">Mouse</span>
+                <span>Look around</span>
+              </div>
+            </div>
+          </div>
+          <div class="input-container">
+            <input
+              id="usernameInput"
+              type="text"
+              placeholder="Username"
+            />
+          </div>
+          <div class="button-container">
+            <button>Play</button>
+            <button id="shareButton" type="button">Invite</button>
+          </div>
+          <div class="social-share" id="socialShare" style="display: none">
+            <a
+              href="https://www.facebook.com/sharer/sharer.php?u=YOUR_URL"
+              target="_blank"
+            >
+              <i class="fab fa-facebook"></i>
+            </a>
+            <a
+              href="https://twitter.com/intent/tweet?url=YOUR_URL"
+              target="_blank"
+            >
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a
+              href="https://www.linkedin.com/sharing/share-offsite/?url=YOUR_URL"
+              target="_blank"
+            >
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="credit-section">
+      <a
+        href=""
+        target="_blank"
+        style="text-decoration: none"
+      >
+        <img src="/img/" alt="Game Programmer roevseee" />
+      </a>
+    </div>
+    <div id="scene-container"></div>
+
+    <script type="module" src="./js/three-background.js"></script>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.2/gsap.min.js"
+      integrity="sha512-kVlGhj2qFy+KBCFuvjBJTGUMxbdqJKs4yK2jh0e0VPhWUPiPC87bzm4THmaaIee3Oj7j6sDpTTgm2EPPiESqBg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="./js/classes/Enemy.js"></script>
+    <script src="./js/classes/Player.js"></script>
+    <script src="./js/classes/Particle.js"></script>
+    <script src="./js/classes/Projectile.js"></script>
+    <script src="./js/classes/Ripple.js"></script>
+    <script src="./js/frontend.js"></script>
+    <script src="./js/eventListeners.js"></script>
+  </body>
+</html>
